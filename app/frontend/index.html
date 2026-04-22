@@ -1,0 +1,189 @@
+<!-- <select id="goal">
+  <option value="" selected disabled>Select your goal</option>
+  <option value="Lose weight">Lose weight</option>
+  <option value="Gain muscle">Gain muscle</option>
+  <option value="Maintain">Maintain</option>
+  <option value="Eat healthy">Eat healthy</option>
+</select>
+
+<button onclick="submitForm()">Submit</button>
+
+<p id="error" style="color:red;"></p>
+
+<script>
+async function submitForm() {
+  const goal = document.getElementById("goal").value;
+
+  const response = await fetch("http://127.0.0.1:8000/api/step-1-goal", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ goal: goal || "" }) // send empty if not selected
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    // show backend error
+    document.getElementById("error").innerText = data.message;
+  } else {
+    document.getElementById("error").innerText = "";
+    console.log("Success:", data);
+  }
+}
+</script> -->
+
+<!-- new -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Meal Planner</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-xl shadow-md w-96">
+      <h2 class="text-xl font-bold mb-4">Step 1 & 2</h2>
+
+      <!-- Goal -->
+      <label class="block mb-1 font-medium">Goal</label>
+      <select id="goal" class="w-full p-2 border rounded mb-1">
+        <option value="" selected disabled>Select your goal</option>
+        <option value="Lose weight">Lose weight</option>
+        <option value="Gain muscle">Gain muscle</option>
+        <option value="Maintain">Maintain</option>
+        <option value="Eat healthy">Eat healthy</option>
+      </select>
+      <p id="goalError" class="text-red-500 text-sm mb-3"></p>
+
+      <!-- Body Metrics -->
+      <label class="block mb-1 font-medium">Height & Weight</label>
+      <input
+        type="text"
+        id="body_metrics"
+        placeholder="e.g. 170cm 70kg OR 5'9 65kg"
+        class="w-full p-2 border rounded mb-1"
+      />
+     
+      <p id="bodyError" class="text-red-500 text-sm mb-3"></p>
+
+      <!-- Submit -->
+      <button
+        onclick="submitForm()"
+        class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+      >
+        Submit
+      </button>
+
+      <!-- Success -->
+      <p id="successMsg" class="text-green-600 text-sm mt-3"></p>
+    </div>
+
+    <script>
+      async function submitForm() {
+        const goal = document.getElementById("goal").value;
+        const body = document.getElementById("body_metrics").value;
+
+        // clear old messages
+        document.getElementById("goalError").innerText = "";
+        document.getElementById("bodyError").innerText = "";
+        document.getElementById("successMsg").innerText = "";
+
+        // 🔥 Basic frontend validation (avoid useless API call)
+        if (!goal && !body) {
+          document.getElementById("goalError").innerText =
+            "Please select one goal so I can plan your meals properly.";
+          document.getElementById("bodyError").innerText =
+            "Please enter both height and weight (e.g., 170cm 70kg).";
+          return;
+        }
+
+        if (!goal) {
+          document.getElementById("goalError").innerText =
+            "Please select one goal so I can plan your meals properly.";
+          return;
+        }
+
+        if (!body) {
+          document.getElementById("bodyError").innerText =
+            "Please enter both height and weight (e.g., 170cm 70kg).";
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:8000/api/step-2-body",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                goal: goal || "",
+                body_metrics: body || "",
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          // ❌ Handle backend errors
+          if (data.status === "error") {
+            if (data.errors.goal) {
+              document.getElementById("goalError").innerText = data.errors.goal;
+            }
+
+            if (data.errors.body_metrics) {
+              document.getElementById("bodyError").innerText =
+                data.errors.body_metrics;
+            }
+
+            return;
+          }
+
+          // ✅ Success
+          document.getElementById("successMsg").innerText =
+            "Data submitted successfully!";
+
+          // 🔥 Auto remove success message
+          setTimeout(() => {
+            document.getElementById("successMsg").innerText = "";
+          }, 3000);
+
+          // 🔥 Reset form
+          document.getElementById("goal").selectedIndex = 0;
+          document.getElementById("body_metrics").value = "";
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      // 🔥 Clear goal error + success when user changes
+      document.getElementById("goal").addEventListener("change", function () {
+        document.getElementById("goalError").innerText = "";
+        document.getElementById("successMsg").innerText = "";
+      });
+
+      // 🔥 Smarter body validation + clear messages
+      document
+        .getElementById("body_metrics")
+        .addEventListener("input", function () {
+          const value = this.value.toLowerCase();
+
+          // clear error if looks like valid format
+          if (
+            (value.includes("cm") && value.includes("kg")) ||
+            (value.includes("'") && value.includes("kg"))
+          ) {
+            document.getElementById("bodyError").innerText = "";
+          }
+
+          document.getElementById("successMsg").innerText = "";
+        });
+    </script>
+  </body>
+</html>
