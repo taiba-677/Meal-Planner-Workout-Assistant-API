@@ -49,7 +49,7 @@ async def validation_exception_handler(request, exc: RequestValidationError):
 
     for err in exc.errors():
         field = err["loc"][-1]
-        errors[field] = "Invalid or missing input."
+        errors[field] = err["msg"]
 
     return JSONResponse(
         status_code=422,
@@ -68,4 +68,20 @@ async def http_exception_handler(request: Request, exc: HTTPException):
             "message": exc.detail
         },
     )
+
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "status": "error",
+            "message": "Something went wrong. Please try again."
+        },
+    )
+
+
+
+
 app.include_router(meal_router, prefix="/api")
