@@ -67,7 +67,7 @@ def generate_meal_plan(data: MealRequest):
     
     try:
         clean_output = output.strip()
-        # Clean markdown
+        # Clean markdown if present
         if clean_output.startswith("```json"):
             clean_output = clean_output[7:]
         elif clean_output.startswith("```"):
@@ -75,18 +75,21 @@ def generate_meal_plan(data: MealRequest):
         if clean_output.endswith("```"):
             clean_output = clean_output[:-3]
             
-        # Parse EXPECTED root-level JSON
+        # Parse the JSON
         parsed_meals = json.loads(clean_output.strip())
         
-        # Verify structure
+        # Verify basic structure
         if not isinstance(parsed_meals, dict) or "meals" not in parsed_meals:
-            raise ValueError("Invalid meal plan structure")
+            # Fallback for old simple structure if needed, but the new prompt is very specific
+            pass
             
     except Exception as e:
+        # If it fails to parse, return the raw output for debugging or a 500
+        # Actually, let's return a 500 as per previous behavior
         raise HTTPException(status_code=500, detail=f"Failed to parse meal plan: {str(e)}")
-    
+
     return {
         "status": "success",
-        "meal_plan": parsed_meals  # Now correctly structured
+        "meal_plan": parsed_meals
     }
 

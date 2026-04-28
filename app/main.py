@@ -49,7 +49,7 @@ async def validation_exception_handler(request, exc: RequestValidationError):
 
     for err in exc.errors():
         field = err["loc"][-1]
-        errors[field] = err["msg"]
+        errors[field] = "Please enter a number (e.g., 1 or 3)."
 
     return JSONResponse(
         status_code=422,

@@ -109,30 +109,79 @@ def validate_all(data: dict):
 
 
 
+    # # -------------------
+    # # Step 5: Allergies
+    # # -------------------
+    # allergies = data.get("allergies")
+    # items = data.get("allergy_items")
+
+    # if not allergies or allergies.strip() == "":
+    #     errors["allergies"] = "Please answer Yes or No. If yes list the foods to avoid."
+    # else:
+    #     a = allergies.strip().lower()
+
+    #     if a not in ["yes", "no"]:
+    #         errors["allergies"] = "Please answer Yes or No. If yes list the foods to avoid."
+
+    #     elif a == "yes":
+    #         if not items or items.strip() == "":
+    #             errors["allergy_items"] = "Please answer Yes or No. If yes list the foods to avoid."
+    #         else:
+    #             allergy_list = [i.strip() for i in items.split(",") if i.strip()]
+
+    #             if not allergy_list:
+    #                 errors["allergy_items"] = "Please answer Yes or No. If yes list the foods to avoid."
+    #     else:
+    #         allergy_list = []
+
+
+
+
+
+    #improved
     # -------------------
     # Step 5: Allergies
     # -------------------
     allergies = data.get("allergies")
     items = data.get("allergy_items")
 
+    allergy_list = []  # always define
+
     if not allergies or allergies.strip() == "":
         errors["allergies"] = "Please answer Yes or No. If yes list the foods to avoid."
+
     else:
         a = allergies.strip().lower()
 
+        # ❌ Invalid input
         if a not in ["yes", "no"]:
             errors["allergies"] = "Please answer Yes or No. If yes list the foods to avoid."
 
+        # ✅ YES case
         elif a == "yes":
             if not items or items.strip() == "":
                 errors["allergy_items"] = "Please answer Yes or No. If yes list the foods to avoid."
             else:
-                allergy_list = [i.strip() for i in items.split(",") if i.strip()]
+                # Normalize + clean
+                allergy_list = [
+                    i.strip().lower()
+                    for i in items.split(",")
+                    if i.strip()
+                ]
 
+                # ❌ Empty after cleaning
                 if not allergy_list:
                     errors["allergy_items"] = "Please answer Yes or No. If yes list the foods to avoid."
+
+        # ✅ NO case
         else:
             allergy_list = []
+
+    # 🔥 IMPORTANT: store clean result back
+    data["allergy_items"] = allergy_list
+    data["allergies"] = a if allergies else "no"
+
+
 
 
     # -------------------
@@ -181,21 +230,36 @@ def validate_all(data: dict):
                 medical_list = items
 
 
-    # -------------------
-    # Step 8: Age (Range)
-    # -------------------
+    # # -------------------
+    # # Step 8: Age (Range)
+    # # -------------------
+    # age = data.get("age")
+
+    # allowed_age = ["18-26", "27-38", "39-50", "50+"]
+
+    # if not age or age.strip() == "":
+    #     errors["age"] = "Please select your age range."
+    # else:
+    #     a = age.strip()
+
+    #     if a not in allowed_age:
+    #         errors["age"] = "Please select a valid age range."
+
+     
+  
+    
+    # Step 8: Age
     age = data.get("age")
 
-    allowed_age = ["18-26", "27-38", "39-50", "50+"]
-
-    if not age or age.strip() == "":
-        errors["age"] = "Please select your age range."
+    if age is None:
+        errors["age"] = "Please enter your age."
     else:
-        a = age.strip()
-
-        if a not in allowed_age:
-            errors["age"] = "Please select a valid age range."
-
+        try:
+            age = int(age)
+            if age < 18 or age > 100:
+                errors["age"] = "Please enter a valid age between 18 and 100."
+        except:
+            errors["age"] = "Please enter your age as a number (e.g. 25)."
 
 
     # -------------------

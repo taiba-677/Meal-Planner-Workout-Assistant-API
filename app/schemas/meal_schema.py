@@ -1,4 +1,19 @@
-from typing import Optional, Any
+# from enum import Enum
+# from pydantic import BaseModel
+# import re
+
+# class GoalEnum(str, Enum):
+#     lose_weight = "Lose weight"
+#     gain_muscle = "Gain muscle"
+#     maintain = "Maintain"
+#     eat_healthy = "Eat healthy"
+
+
+# class GoalRequest(BaseModel):
+#     goal: GoalEnum
+#     body_metrics: str
+
+from typing import Optional
 from pydantic import BaseModel,Field,field_validator
 import re
 class MealRequest(BaseModel):
@@ -8,14 +23,14 @@ class MealRequest(BaseModel):
     diet_type: str = Field(..., description="None / Halal / Vegetarian / Vegan / Keto")
     allergies: str = Field(..., description="Yes or No", example="Yes")
     allergy_items: str = Field("", description="Comma-separated foods if Yes", example="peanuts, dairy")
-    meals_per_day: Any = Field(None, description="Number of meals per day (e.g., 1 to 6)")
+    meals_per_day: int = Field(..., description="Number of meals per day (e.g., 1 to 6)")
 
     medical_conditions: str = Field(
     ...,
     description="e.g. diabetes, high cholesterol, or 'none'"
 )
     
-    age: str = Field(..., description="18-26 / 27-38 / 39-50 / 50+")
+    age: int = Field(..., description="Age in years (e.g. 25)")
     gender: str = Field(..., description="Male / Female / Prefer not to say")
 
 
