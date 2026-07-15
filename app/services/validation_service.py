@@ -1,6 +1,4 @@
 
-#Step 2:
-
 import re
 
 
@@ -107,38 +105,6 @@ def validate_all(data: dict):
         else:
             diet = allowed_diet[d]
 
-
-
-    # # -------------------
-    # # Step 5: Allergies
-    # # -------------------
-    # allergies = data.get("allergies")
-    # items = data.get("allergy_items")
-
-    # if not allergies or allergies.strip() == "":
-    #     errors["allergies"] = "Please answer Yes or No. If yes list the foods to avoid."
-    # else:
-    #     a = allergies.strip().lower()
-
-    #     if a not in ["yes", "no"]:
-    #         errors["allergies"] = "Please answer Yes or No. If yes list the foods to avoid."
-
-    #     elif a == "yes":
-    #         if not items or items.strip() == "":
-    #             errors["allergy_items"] = "Please answer Yes or No. If yes list the foods to avoid."
-    #         else:
-    #             allergy_list = [i.strip() for i in items.split(",") if i.strip()]
-
-    #             if not allergy_list:
-    #                 errors["allergy_items"] = "Please answer Yes or No. If yes list the foods to avoid."
-    #     else:
-    #         allergy_list = []
-
-
-
-
-
-    #improved
     # -------------------
     # Step 5: Allergies
     # -------------------
@@ -228,26 +194,8 @@ def validate_all(data: dict):
                 errors["medical_conditions"] = "You can type 'none' if not applicable."
             else:
                 medical_list = items
-
-
-    # # -------------------
-    # # Step 8: Age (Range)
-    # # -------------------
-    # age = data.get("age")
-
-    # allowed_age = ["18-26", "27-38", "39-50", "50+"]
-
-    # if not age or age.strip() == "":
-    #     errors["age"] = "Please select your age range."
-    # else:
-    #     a = age.strip()
-
-    #     if a not in allowed_age:
-    #         errors["age"] = "Please select a valid age range."
-
-     
   
-    
+
     # Step 8: Age
     age = data.get("age")
 
@@ -280,76 +228,6 @@ def validate_all(data: dict):
             gender = g
 
 
-    #You may delete this its optional Cusine , preferences , budget
-    # -------------------
-    # Step 10: Cuisine
-    # -------------------
-    # cuisine = data.get("cuisine")
-
-    # allowed_cuisine = [
-    #     "pakistani",
-    #     "indian",
-    #     "western",
-    #     "middle eastern",
-    #     "mixed"
-    # ]
-
-    # if not cuisine or cuisine.strip() == "":
-    #     errors["cuisine"] = "Please select your preferred cuisine."
-    # else:
-    #     c = cuisine.strip().lower()
-
-    #     if c not in allowed_cuisine:
-    #         errors["cuisine"] = "Please select a valid cuisine."
-    #     else:
-    #         cuisine = c
-
-
-    # -------------------
-    # Step 11: Food Preference
-    # -------------------
-    # food_pref = data.get("food_preference")
-
-    # allowed_food_pref = [
-    #     "spicy",
-    #     "mild",
-    #     "sweet",
-    #     "balanced",
-    #     "high protein",
-    #     "low carb"
-    # ]
-
-    # if not food_pref or food_pref.strip() == "":
-    #     errors["food_preference"] = "Please select your food preference."
-    # else:
-    #     f = food_pref.strip().lower()
-
-    #     if f not in allowed_food_pref:
-    #         errors["food_preference"] = "Please select a valid food preference."
-    #     else:
-    #         food_pref = f
-
-
-
-    # -------------------
-    # Step 12: Budget
-    # -------------------
-    # budget = data.get("budget")
-
-    # allowed_budget = ["low", "medium", "high"]
-
-    # if not budget or budget.strip() == "":
-    #     errors["budget"] = "Please select your budget."
-    # else:
-    #     b = budget.strip().lower()
-
-    #     if b not in allowed_budget:
-    #         errors["budget"] = "Please select: Low, Medium, or High."
-    #     else:
-    #         budget = b
-
-
-
     # -------------------
     # FINAL
     # -------------------
@@ -368,7 +246,5 @@ def validate_all(data: dict):
         "medical_conditions": medical_list,
         "age": age,
         "gender": gender
-        # "cuisine": cuisine,
-        # "food_preference": food_pref,
-        # "budget": budget
+      
     } 
