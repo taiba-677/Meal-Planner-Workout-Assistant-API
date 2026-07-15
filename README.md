@@ -1,4 +1,4 @@
-﻿# Meal Planner & Workout Assistant API
+# Meal Planner & Workout Assistant API
 
 **Meal Planner & Workout Assistant API** is an AI-powered backend that generates personalised meal plans and weekly workout schedules based on a user's body metrics, goals, diet type, and fitness level. Nutrition targets are computed server-side (Mifflin-St Jeor BMR + TDEE) and the AI output is always validated and overwritten — never trusted blindly.
 
@@ -80,7 +80,6 @@ meal_planner_api/
 │   │   └── workout_validation_service.py ← Workout input validation
 │   └── utils/
 │       └── json_parser.py       ← Safe JSON parser for Gemini output
-├── test_api.py                  ← Integration test (5 scenarios)
 ├── requirements.txt
 └── README.md
 ```
@@ -205,12 +204,3 @@ uvicorn app.main:app --reload --port 8000
 }
 ```
 
----
-
-## 🧑‍💻 Integration Tests
-
-```bash
-python test_api.py
-```
-
-Runs 5 automated scenarios (muscle gain, weight loss, keto, athlete, vegan) and checks calorie/protein deviation tolerances.
